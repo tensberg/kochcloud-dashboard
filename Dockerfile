@@ -1,5 +1,9 @@
 FROM python:3.13-slim
 
+LABEL org.opencontainers.image.source=https://github.com/tensberg/kochcloud-dashboard
+LABEL org.opencontainers.image.description="Dashboard application for the Kochcloud, a self-hosted cloud service."
+LABEL org.opencontainers.image.licenses=MIT
+
 RUN groupadd --gid 1000 appuser \
     && useradd --uid 1000 --gid 1000 -ms /bin/bash appuser \
     && mkdir /app && chown appuser /app
