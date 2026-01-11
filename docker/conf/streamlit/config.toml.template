@@ -1,0 +1,11 @@
+[logger]
+level = "debug"
+
+[server]
+fileWatcherType = "none"
+headless = true
+
+[browser]
+gatherUsageStats = false
+serverAddress = "${SERVER_HOSTNAME}"
+serverPort = "${SERVER_PORT}"

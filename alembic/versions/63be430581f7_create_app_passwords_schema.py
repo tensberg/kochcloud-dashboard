@@ -31,7 +31,7 @@ def upgrade() -> None:
         sa.Column('last_login', sa.DateTime(timezone=True), nullable=False),
     )
     op.create_table(
-        'token',
+        'app_token',
         sa.Column('id', sa.Integer(), primary_key=True, autoincrement=True),
         sa.Column('user_id', sa.Integer(), nullable=False),
         sa.Column('app', sa.String(), nullable=False),
@@ -45,6 +45,6 @@ def upgrade() -> None:
 
 def downgrade() -> None:
     """Downgrade schema."""
-    op.drop_table('token')
+    op.drop_table('app_token')
     op.drop_table('user')
     op.execute('DROP EXTENSION IF EXISTS "pgcrypto";')

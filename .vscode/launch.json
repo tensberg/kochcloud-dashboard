@@ -5,13 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "App Passwords",
+            "name": "Kochcloud Dashboard",
             "type": "debugpy",
             "request": "launch",
             "module": "streamlit",
             "args": [
                 "run",
-                "app-passwords/app-passwords.py"
+                "kochcloud-dashboard/email-passwords.py"
             ],
             "cwd": "${workspaceFolder}"
         }

@@ -1,4 +1,5 @@
 .streamlit/secrets.toml
 .venv
+docker/local.env
 alembic.ini
 __pycache__/
