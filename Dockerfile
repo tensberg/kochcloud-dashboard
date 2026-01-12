@@ -12,13 +12,14 @@ ENV PATH=/home/appuser/.local/bin:$PATH
 
 RUN apt-get update && apt-get install -y \
     gettext-base \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 USER appuser
 WORKDIR /app
 
 COPY requirements.txt .
-RUN pip3 install -r /app/requirements.txt
+RUN pip3 install --no-cache-dir -r /app/requirements.txt
 
 COPY docker/docker-entrypoint.sh .
 COPY docker/conf/ conf
