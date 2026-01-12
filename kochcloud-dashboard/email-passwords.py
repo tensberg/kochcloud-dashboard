@@ -80,6 +80,8 @@ def delete_password(pw_id):
 
 if not st.user.is_logged_in:
     st.login()
+    st.write("Bitte melden Sie sich an, um Ihre Email-Passwörter zu verwalten.")
+    st.stop() # the script will be re-run after login
 
 if 'user_id' not in st.session_state:
     user_id = upsert_loggedin_user()
