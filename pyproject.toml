@@ -3,11 +3,14 @@ requires = ["setuptools >= 77.0.3"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "app-passwords"
+name = "kochcloud-dashboard"
 dynamic = ["version"]
 dependencies = [
     "streamlit",
-    "alembic"
+    "alembic",
+    "SQLAlchemy",
+    "psycopg2-binary",
+    "Authlib"
 ]
 requires-python = ">=3.13"
 authors = [
