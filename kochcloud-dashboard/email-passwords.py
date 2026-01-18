@@ -15,6 +15,7 @@ EMAIL_HASH_ALGO="bf"
 
 TZ_NAME = datetime.now().astimezone().tzname()
 DATETIME_FORMAT="DD.MM.YYYY HH:mm"
+PASSWORD_LENGTH=20
 
 conn = st.connection("postgresql", type="sql")
 
@@ -46,7 +47,7 @@ def create_password(description):
 
 def generate_password():
     alphabet = string.ascii_letters + string.digits
-    return ''.join(secrets.choice(alphabet) for i in range(16))
+    return ''.join(secrets.choice(alphabet) for i in range(PASSWORD_LENGTH))
 
 def upsert_loggedin_user():
     with conn.session as session:
