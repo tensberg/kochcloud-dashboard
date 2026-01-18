@@ -17,6 +17,8 @@ TZ_NAME = datetime.now().astimezone().tzname()
 DATETIME_FORMAT="DD.MM.YYYY HH:mm"
 PASSWORD_LENGTH=20
 
+st.set_page_config("Kochcloud")
+
 conn = st.connection("postgresql", type="sql")
 
 @st.dialog("Passwort erzeugen", dismissible=True)
