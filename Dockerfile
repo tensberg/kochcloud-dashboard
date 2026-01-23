@@ -25,6 +25,7 @@ COPY docker/docker-entrypoint.sh .
 COPY docker/conf/ conf
 COPY alembic/ alembic
 COPY kochcloud-dashboard/ kochcloud-dashboard
+COPY static/ kochcloud-dashboard/static
 
 EXPOSE 8501
 

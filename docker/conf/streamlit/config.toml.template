@@ -1,9 +1,10 @@
 [logger]
-level = "debug"
+level = "info"
 
 [server]
 fileWatcherType = "none"
 headless = true
+enableStaticServing = true
 
 [browser]
 gatherUsageStats = false

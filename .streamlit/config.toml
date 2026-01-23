@@ -3,3 +3,6 @@ level = "debug"
 
 [browser]
 gatherUsageStats = false
+
+[server]
+enableStaticServing = true
