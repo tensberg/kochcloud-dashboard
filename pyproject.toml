@@ -10,7 +10,8 @@ dependencies = [
     "alembic",
     "SQLAlchemy",
     "psycopg2-binary",
-    "Authlib"
+    "Authlib",
+    "pyyaml",
 ]
 requires-python = ">=3.13"
 authors = [

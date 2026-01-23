@@ -28,8 +28,6 @@ stopRunningProcess() {
     fi
 }
 
-trap stopRunningProcess EXIT TERM
-
 cd /app
 
 echo "# initializing configuration"
@@ -40,10 +38,12 @@ envsubst < /app/conf/alembic.ini.template > /app/alembic.ini
 envsubst < /app/conf/streamlit/config.toml.template > /app/.streamlit/config.toml
 envsubst < /app/conf/streamlit/secrets.toml.template > /app/.streamlit/secrets.toml
 
+trap stopRunningProcess EXIT TERM
+
 echo "# running alembic database schema migration"
 
 runProcess alembic upgrade head
 
 echo "# running streamlit app kochcloud-dashboard"
 
-runProcess streamlit run /app/kochcloud-dashboard/email-passwords.py
+runProcess streamlit run /app/kochcloud-dashboard/kochcloud-dashboard-app.py

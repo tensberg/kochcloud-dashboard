@@ -4,7 +4,6 @@ from sqlalchemy.sql import text
 import string
 import secrets
 
-
 # adapt numpy dataframe to postgresql, https://stackoverflow.com/a/56766135/1095318
 import numpy as np
 from psycopg2.extensions import register_adapter, AsIs
@@ -16,8 +15,6 @@ EMAIL_HASH_ALGO="bf"
 TZ_NAME = datetime.now().astimezone().tzname()
 DATETIME_FORMAT="DD.MM.YYYY HH:mm"
 PASSWORD_LENGTH=20
-
-st.set_page_config("Kochcloud", ':cloud:')
 
 conn = st.connection("postgresql", type="sql")
 
@@ -83,11 +80,6 @@ def delete_password(pw_id):
         print(result)
 
 # main application
-
-if not st.user.is_logged_in:
-    st.login()
-    st.write("Bitte melden Sie sich an, um Ihre Email-Passwörter zu verwalten.")
-    st.stop() # the script will be re-run after login
 
 if 'user_id' not in st.session_state:
     user_id = upsert_loggedin_user()

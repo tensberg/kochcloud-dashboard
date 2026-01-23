@@ -11,7 +11,7 @@
             "module": "streamlit",
             "args": [
                 "run",
-                "kochcloud-dashboard/email-passwords.py"
+                "kochcloud-dashboard/kochcloud-dashboard-app.py"
             ],
             "cwd": "${workspaceFolder}"
         }

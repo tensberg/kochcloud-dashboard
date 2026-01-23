@@ -1,0 +1,21 @@
+import streamlit as st
+
+# authentication and login
+
+if not st.user.is_logged_in:
+    st.login()
+    st.write("Bitte melden Sie sich an, um Ihre Email-Passwörter zu verwalten.")
+    st.stop() # the script will be re-run after login
+
+# general page setup
+
+st.set_page_config("Kochcloud", ":cloud:")
+st.logo("static/kochcloud_logo.webp", size="large")
+
+# page definitions
+
+pg = st.navigation([
+    st.Page("dashboard.py", title="☁️ Übersicht"), 
+    st.Page("email-passwords.py", title="📧 Email-Passwörter")
+    ])
+pg.run()
