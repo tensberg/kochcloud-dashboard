@@ -1,6 +1,6 @@
 [alembic]
 script_location = /app/alembic
-sqlalchemy.url = postgresql://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
+sqlalchemy.url = postgresql://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_DATABASE}
 
 [loggers]
 keys = root,sqlalchemy,alembic
