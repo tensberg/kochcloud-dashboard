@@ -10,7 +10,7 @@ if not st.user.is_logged_in:
 # general page setup
 
 st.set_page_config("Kochcloud", ":cloud:")
-st.logo("static/kochcloud_logo.webp", size="large")
+st.logo("kochcloud-dashboard/kochcloud_logo.svg", size="large")
 
 # page definitions
 

@@ -2,7 +2,7 @@ import streamlit as st
 from config import APP_CONFIG
 
 with st.container(horizontal=True, width="stretch", horizontal_alignment="center"):
-    st.image("static/kochcloud_logo.webp", width=256)
+    st.image("kochcloud-dashboard/kochcloud_logo.svg", width=256)
 
 st.title("Kochcloud für {}".format(st.user["name"]))
 
