@@ -18,4 +18,4 @@ for i, link in enumerate(APP_CONFIG["services"]):
 st.header("Konfiguration")
 
 c1, c2 = st.columns(2, gap="small")
-c1.link_button(url="/email-passwords", label="&nbsp;\n\nEmail-Passwörter verwalten\n\n&nbsp;", icon="📧", width="stretch", type="secondary")
+c1.page_link("email-passwords.py", label="Email-Passwörter verwalten", icon="📧", width="stretch")
