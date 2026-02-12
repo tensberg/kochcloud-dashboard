@@ -4,7 +4,6 @@ import os
 import streamlit as st
 import yaml
 
-
 @st.cache_data
 def load_config(path="conf/kochcloud-dashboard.yaml"):
     if not os.path.exists(path):

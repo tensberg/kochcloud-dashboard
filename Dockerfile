@@ -24,7 +24,7 @@ RUN pip3 install --no-cache-dir -r /app/requirements.txt
 COPY docker/docker-entrypoint.sh .
 COPY docker/conf/ conf
 COPY alembic/ alembic
-COPY kochcloud-dashboard/ kochcloud-dashboard
+COPY kochcloud/ kochcloud
 
 EXPOSE 8501
 

@@ -2,7 +2,7 @@ import streamlit as st
 from sqlalchemy.sql import text
 import string
 import secrets
-from config import MOMENTJS_DATETIME_FORMAT, TZ_NAME
+from dashboard.config import MOMENTJS_DATETIME_FORMAT, TZ_NAME
 
 # adapt numpy dataframe to postgresql, https://stackoverflow.com/a/56766135/1095318
 import numpy as np

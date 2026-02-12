@@ -46,4 +46,4 @@ runProcess alembic upgrade head
 
 echo "# running streamlit app kochcloud-dashboard"
 
-runProcess streamlit run /app/kochcloud-dashboard/kochcloud-dashboard-app.py
+runProcess streamlit run /app/kochcloud/kochcloud-dashboard-app.py

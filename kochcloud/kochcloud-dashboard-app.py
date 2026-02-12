@@ -10,13 +10,13 @@ if not st.user.is_logged_in:
 # general page setup
 
 st.set_page_config("Kochcloud", ":cloud:")
-st.logo("kochcloud-dashboard/kochcloud_logo.svg", size="large")
+st.logo("kochcloud/kochcloud_logo.svg", size="large")
 
 # page definitions
 
 pg = st.navigation([
-    st.Page("dashboard.py", title="☁️ Übersicht"), 
-    st.Page("email-passwords.py", title="📧 Email-Passwörter"),
-    st.Page("vpn.py", title="🔒 Kochcloud VPN"),
+    st.Page("dashboard/dashboard-page.py", title="☁️ Übersicht"), 
+    st.Page("emailpasswords/email-passwords-page.py", title="📧 Email-Passwörter"),
+    st.Page("vpn/vpn-page.py", title="🔒 Kochcloud VPN"),
     ])
 pg.run()

@@ -1,7 +1,7 @@
 import streamlit as st
 import qrcode
 import qrcode.image.svg
-from wireguard import *
+from vpn.wireguard import *
 
 user_sub = st.user.sub
 

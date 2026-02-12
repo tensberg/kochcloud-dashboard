@@ -1,8 +1,8 @@
 import streamlit as st
-from config import APP_CONFIG
+from dashboard.config import APP_CONFIG
 
 with st.container(horizontal=True, width="stretch", horizontal_alignment="center"):
-    st.image("kochcloud-dashboard/kochcloud_logo.svg", width=256)
+    st.image("kochcloud/kochcloud_logo.svg", width=256)
 
 st.title("Kochcloud für {}".format(st.user["name"]))
 
@@ -18,5 +18,5 @@ for i, link in enumerate(APP_CONFIG["services"]):
 st.header("Konfiguration")
 
 c1, c2 = st.columns(2, gap="small")
-c1.page_link("email-passwords.py", label="Email-Passwörter verwalten", icon="📧", width="stretch")
-c2.page_link("vpn.py", label="Kochcloud VPN konfigurieren", icon="🔒", width="stretch")
+c1.page_link("emailpasswords/email-passwords-page.py", label="Email-Passwörter verwalten", icon="📧", width="stretch")
+c2.page_link("vpn/vpn-page.py", label="Kochcloud VPN konfigurieren", icon="🔒", width="stretch")

@@ -2,7 +2,7 @@ import os
 import re
 from attr import dataclass
 import streamlit as st
-from config import APP_CONFIG
+from dashboard.config import APP_CONFIG
 
 WG_CONFIG = APP_CONFIG.get("wireguard", {})
 WG_SERVER_CONFIG_FILE = os.environ.get("WG_SERVER_CONFIG_FILE", WG_CONFIG.get("server_config_file", "/etc/wireguard/wg0.conf"))
