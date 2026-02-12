@@ -12,8 +12,9 @@ def create_qr_code(config_content):
     return img.to_string(encoding='unicode')
 
 @st.fragment
-def show_download_button(config_content):
-    st.download_button(":material/download: Konfiguration herunterladen", config_content, file_name=WG_CLIENT_CONFIG_DOWNLOAD_FILENAME, mime="text/plain")
+def show_download_button(config, config_content):
+    st.download_button(":material/download: Konfiguration herunterladen", config_content, 
+                       file_name=WG_CLIENT_CONFIG_DOWNLOAD_FILENAME, mime="text/plain", key=f"download_{config.filename}")
 
 def show_vpn_config(config: WireGuardConfig):
     config_content = wg_load_config_content(config.filename)
@@ -22,7 +23,7 @@ def show_vpn_config(config: WireGuardConfig):
         with st.container(horizontal_alignment="center", width="content"):
             st.markdown(f"**{config.label}**")
         st.image(config_qr_code)
-        show_download_button(config_content)
+        show_download_button(config, config_content)
 
 # main app
 
@@ -45,3 +46,13 @@ if not configs:
 
 for config in configs:
     show_vpn_config(config)
+
+if len(configs) < 5:
+    with st.expander("VPN Konfiguration hinzufügen"):
+        with st.form("create_vpn_config_form", border=False):
+            label = st.text_input("Bezeichnung", value=f"Smartphone {len(configs) + 1}")
+            create_button = st.form_submit_button("Erstellen", icon=":material/add:")
+
+        if create_button:
+            wg_create_vpn_config_for_user(user_sub, label)
+            st.rerun()
