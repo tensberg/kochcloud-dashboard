@@ -1,4 +1,5 @@
 
+from datetime import datetime
 import os
 import streamlit as st
 import yaml
@@ -13,3 +14,7 @@ def load_config(path="conf/kochcloud-dashboard.yaml"):
         return yaml.safe_load(f)
 
 APP_CONFIG = load_config()
+
+TZ_NAME = datetime.now().astimezone().tzname()
+DATETIME_FORMAT="%d.%m.%Y %H:%M"
+MOMENTJS_DATETIME_FORMAT="DD.MM.YYYY HH:mm"

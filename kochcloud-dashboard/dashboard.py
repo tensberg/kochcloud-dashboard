@@ -19,3 +19,4 @@ st.header("Konfiguration")
 
 c1, c2 = st.columns(2, gap="small")
 c1.page_link("email-passwords.py", label="Email-Passwörter verwalten", icon="📧", width="stretch")
+c2.page_link("vpn.py", label="Kochcloud VPN konfigurieren", icon="🔒", width="stretch")

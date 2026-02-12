@@ -12,6 +12,7 @@ dependencies = [
     "psycopg2-binary",
     "Authlib",
     "pyyaml",
+    "qrcode",
 ]
 requires-python = ">=3.13"
 authors = [
@@ -20,7 +21,7 @@ authors = [
 maintainers = [
     { name = "Michael Koch", email = "tensberg@gmx.net" }
 ]
-description = "Manage email app passwords for OIDC users in a self-hosted environment."
+description = "Manage email app passwords for OIDC users and VPN configurationsin a self-hosted environment."
 readme = "README.md"
 license = "MIT"
 classifiers = [

@@ -15,3 +15,8 @@ services:
     description: "Description for Example 4"
     url: "https://4.example.domain"
     icon: "📋"
+wireguard:
+  server_config_file: "./conf/wireguard/wg0.conf"
+  server_public_key: "FOO_SERVER_PUBLIC_KEY"
+  client_config_dir: "./conf/wireguard/clients"
+  client_config_download_filename: "Kochcloud VPN.conf"

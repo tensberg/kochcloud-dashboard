@@ -36,6 +36,11 @@ passdb sql {
 
 Note that currently the DB does not contain sufficient data to support `userdb` queries, so the userdb needs to be configured using a different datasource.
 
+# VPN Configuration
+
+A simple interface to download WireGuard VPN configuration files for the logged-in user.
+The VPN configuration files are created by calling an external shell script.
+
 # Credits
 
 The Dovecot password functionality is inspired by [devicepasswords](https://github.com/varbin/devicepasswords).

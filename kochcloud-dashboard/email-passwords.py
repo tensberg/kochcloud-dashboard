@@ -1,8 +1,8 @@
-from datetime import datetime
 import streamlit as st
 from sqlalchemy.sql import text
 import string
 import secrets
+from config import MOMENTJS_DATETIME_FORMAT, TZ_NAME
 
 # adapt numpy dataframe to postgresql, https://stackoverflow.com/a/56766135/1095318
 import numpy as np
@@ -12,8 +12,6 @@ register_adapter(np.int64, AsIs)
 EMAIL_APP="dovecot"
 EMAIL_HASH_ALGO="bf"
 
-TZ_NAME = datetime.now().astimezone().tzname()
-DATETIME_FORMAT="DD.MM.YYYY HH:mm"
 PASSWORD_LENGTH=20
 
 conn = st.connection("postgresql", type="sql")
@@ -126,8 +124,8 @@ pw_table = st.dataframe(data=stored_passwords, selection_mode="single-row", on_s
     0: None,
     "id": None,
     "description": "Beschreibung",
-    "created": st.column_config.DatetimeColumn("Erstellt", format=DATETIME_FORMAT, timezone=TZ_NAME),
-    "last_used": st.column_config.DatetimeColumn("Zuletzt verwendet", format=DATETIME_FORMAT, timezone=TZ_NAME)
+    "created": st.column_config.DatetimeColumn("Erstellt", format=MOMENTJS_DATETIME_FORMAT, timezone=TZ_NAME),
+    "last_used": st.column_config.DatetimeColumn("Zuletzt verwendet", format=MOMENTJS_DATETIME_FORMAT, timezone=TZ_NAME)
 })
 
 pw_selected_row = pw_table.selection.rows[0] if pw_table.selection.rows else None
