@@ -12,18 +12,15 @@ def create_qr_code(config_content):
     return img.to_string(encoding='unicode')
 
 @st.fragment
-def show_download_button(config, config_content):
-    st.download_button(":material/download: Konfiguration herunterladen", config_content, 
-                       file_name=WG_CLIENT_CONFIG_DOWNLOAD_FILENAME, mime="text/plain", key=f"download_{config.filename}")
-
 def show_vpn_config(config: WireGuardConfig):
-    config_content = wg_load_config_content(config.filename)
+    config_content = wg_config_file_body(config)
     config_qr_code = create_qr_code(config_content)
     with st.container(border=True, width="content", horizontal_alignment="center"):
         with st.container(horizontal_alignment="center", width="content"):
-            st.markdown(f"**{config.label}**")
+            st.markdown(f"**{config.description}**")
         st.image(config_qr_code)
-        show_download_button(config, config_content)
+        st.download_button(":material/download: Konfiguration herunterladen", config_content, 
+                        file_name=WG_CLIENT_CONFIG_DOWNLOAD_FILENAME, mime="text/plain", key=f"download_{config.id}")
 
 # main app
 
@@ -42,7 +39,8 @@ st.write("Laden Sie die VPN Konfiguration herunter und importieren Sie sie in di
 # show existing configs for the user
 configs = wg_get_vpn_configs_for_user(user_sub)
 if not configs:
-    configs = wg_create_vpn_config_for_user(user_sub, "Smartphone")
+    wg_create_vpn_config_for_user(user_sub, "Smartphone")
+    configs = wg_get_vpn_configs_for_user(user_sub)
 
 for config in configs:
     show_vpn_config(config)

@@ -3,18 +3,13 @@ from sqlalchemy.sql import text
 import string
 import secrets
 from dashboard.config import MOMENTJS_DATETIME_FORMAT, TZ_NAME
-
-# adapt numpy dataframe to postgresql, https://stackoverflow.com/a/56766135/1095318
-import numpy as np
-from psycopg2.extensions import register_adapter, AsIs
-register_adapter(np.int64, AsIs)
+from dashboard.db import DB_CONNECTION as conn
+from dashboard.db import DB_USER_ID
 
 EMAIL_APP="dovecot"
 EMAIL_HASH_ALGO="bf"
 
 PASSWORD_LENGTH=20
-
-conn = st.connection("postgresql", type="sql")
 
 @st.dialog("Passwort erzeugen", dismissible=True)
 def create_password_form():
@@ -33,7 +28,7 @@ def create_password(description):
     password = generate_password()
     with conn.session as session:
         session.execute(text("INSERT INTO \"app_token\" (user_id,app,description,hash) VALUES (:user_id,:app,:description,CRYPT(:password, gen_salt(:hash_algo)))"), {
-            "user_id": user_id,
+            "user_id": DB_USER_ID,
             "app": EMAIL_APP,
             "description": description,
             "password": password,
@@ -45,19 +40,6 @@ def create_password(description):
 def generate_password():
     alphabet = string.ascii_letters + string.digits
     return ''.join(secrets.choice(alphabet) for i in range(PASSWORD_LENGTH))
-
-def upsert_loggedin_user():
-    with conn.session as session:
-        result = session.execute(text("""
-                        INSERT INTO "user" (sub,email,last_login) VALUES (:sub,:email, NOW())
-                        ON CONFLICT (sub) DO UPDATE SET email=:email, last_login=NOW()
-                        RETURNING id;
-                        """), {
-                            "sub": st.user.sub,
-                            "email": st.user.email
-                        })
-        session.commit()
-        return result.one()[0]
 
 @st.dialog("Passwort löschen", dismissible=True)
 def confirm_delete_password(pw_id, description):
@@ -78,12 +60,6 @@ def delete_password(pw_id):
         print(result)
 
 # main application
-
-if 'user_id' not in st.session_state:
-    user_id = upsert_loggedin_user()
-    st.session_state['user_id'] = user_id
-else:
-    user_id = st.session_state['user_id']
 
 st.title("Kochcloud Email für {}".format(st.user["name"]))
 
