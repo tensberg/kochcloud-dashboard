@@ -1,15 +1,6 @@
 import streamlit as st
-from sqlalchemy.sql import text
-import string
-import secrets
 from dashboard.config import MOMENTJS_DATETIME_FORMAT, TZ_NAME
-from dashboard.db import DB_CONNECTION as conn
-from dashboard.db import DB_USER_ID
-
-EMAIL_APP="dovecot"
-EMAIL_HASH_ALGO="bf"
-
-PASSWORD_LENGTH=20
+from emailpasswords.passwords import pw_create_password,pw_delete_password, pw_get_passwords_for_user
 
 @st.dialog("Passwort erzeugen", dismissible=True)
 def create_password_form():
@@ -21,25 +12,9 @@ def create_password_form():
             if not description_val:
                 st.error("Bitte Beschreibung angeben")
             else:
-                st.session_state["generated_password"] = create_password(description_val)
+                st.session_state["generated_password"] = pw_create_password(description_val)
                 st.rerun()
 
-def create_password(description):
-    password = generate_password()
-    with conn.session as session:
-        session.execute(text("INSERT INTO \"app_token\" (user_id,app,description,hash) VALUES (:user_id,:app,:description,CRYPT(:password, gen_salt(:hash_algo)))"), {
-            "user_id": DB_USER_ID,
-            "app": EMAIL_APP,
-            "description": description,
-            "password": password,
-            "hash_algo": EMAIL_HASH_ALGO
-        })
-        session.commit()
-    return password
-
-def generate_password():
-    alphabet = string.ascii_letters + string.digits
-    return ''.join(secrets.choice(alphabet) for i in range(PASSWORD_LENGTH))
 
 @st.dialog("Passwort löschen", dismissible=True)
 def confirm_delete_password(pw_id, description):
@@ -47,17 +22,11 @@ def confirm_delete_password(pw_id, description):
 
     with st.container(horizontal=True, width="content"):
         if st.button("Löschen", icon=":material/delete:"):
-            delete_password(pw_id)
+            pw_delete_password(pw_id)
             st.rerun()
 
         if (st.button("Abbrechen", icon=":material/cancel:")):
             st.rerun()
-
-def delete_password(pw_id):
-    with conn.session as session:
-        result = session.execute(text("DELETE FROM \"app_token\" where id=:id"), { "id": pw_id })
-        session.commit()
-        print(result)
 
 # main application
 
@@ -88,12 +57,7 @@ with st.container(horizontal=True, vertical_alignment="center"):
 
 st.header("Email-Passwörter")
 
-stored_passwords = conn.query("""
-                SELECT t.id, t.description, t.created, t.last_used
-                    FROM "app_token" t,"user" u 
-                    WHERE t.user_id=u.id AND u.sub=:sub
-                ORDER BY t.created
-                """, ttl=0, params = { "sub": st.user["sub"]})
+stored_passwords = pw_get_passwords_for_user(st.user["sub"])
 
 pw_table = st.dataframe(data=stored_passwords, selection_mode="single-row", on_select="rerun",
              placeholder="-", column_config={
