@@ -5,15 +5,18 @@ LABEL org.opencontainers.image.description="Dashboard application for the Kochcl
 LABEL org.opencontainers.image.licenses=MIT
 
 RUN groupadd --gid 1000 appuser \
-    && useradd --uid 1000 --gid 1000 -ms /bin/bash appuser \
+    && useradd --uid 1000 --gid 1000 -ms /bin/bash -G sudo appuser \
     && mkdir /app && chown appuser /app
 
 ENV PATH=/home/appuser/.local/bin:$PATH
 
 RUN apt-get update && apt-get install -y \
     gettext-base \
+    wireguard-tools \
+    sudo \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+RUN echo "appuser ALL=NOPASSWD: /app/kochcloud/vpn/wg-add-client.py *" >> /etc/sudoers
 
 USER appuser
 WORKDIR /app

@@ -16,7 +16,10 @@ services:
     url: "https://4.example.domain"
     icon: "📋"
 wireguard:
-  server_config_file: "./conf/wireguard/wg0.conf"
-  server_public_key: "FOO_SERVER_PUBLIC_KEY"
-  client_config_dir: "./conf/wireguard/clients"
+  interface_name: "wg0"
+  server_public_key: "UNSET_SERVER_PUBLIC_KEY"
+  server_domain: "vpn.webko.ch"
+  server_port: "51820"
   client_config_download_filename: "Kochcloud VPN.conf"
+  subnet: "10.100.1"
+  kochcloud_ip_address: "10.100.0.1"

@@ -10,13 +10,13 @@ from dashboard.db import DB_CONNECTION as conn
 
 WG_CONFIG = APP_CONFIG.get("wireguard", {})
 WG_INTERFACE_NAME = os.environ.get("WG_INTERFACE_NAME", WG_CONFIG.get("interface_name", "wg0"))
-WG_SERVER_CONFIG_FILE = os.environ.get("WG_SERVER_CONFIG_FILE", WG_CONFIG.get("server_config_file", "/etc/wireguard/wg0.conf"))
-WG_SERVER_PUBLIC_KEY = os.environ.get("WG_SERVER_PUBLIC_KEY", WG_CONFIG.get("server_public_key", "UNSET_PUBLIC_KEY"))
+WG_SERVER_PUBLIC_KEY = os.environ.get("WG_SERVER_PUBLIC_KEY", WG_CONFIG.get("server_public_key", "UNSET_SERVER_PUBLIC_KEY"))
 WG_SERVER_DOMAIN = os.environ.get("WG_SERVER_DOMAIN", WG_CONFIG.get("server_domain", "vpn.webko.ch"))
 WG_SERVER_PORT = os.environ.get("WG_SERVER_PORT", WG_CONFIG.get("server_port", "51820"))
 WG_CLIENT_CONFIG_DOWNLOAD_FILENAME = os.environ.get("WG_CLIENT_CONFIG_DOWNLOAD_FILENAME", WG_CONFIG.get("client_config_download_filename", "Kochcloud VPN.conf"))
 WG_SUBNET = os.environ.get("WG_SUBNET", WG_CONFIG.get("subnet", "10.100.1"))
 WG_KOCHCLOUD_IP_ADDRESS = os.environ.get("WG_KOCHCLOUD_IP_ADDRESS", WG_CONFIG.get("kochcloud_ip_address", "10.100.0.1"))
+WG_RUN_ADD_CLIENT = os.environ.get("WG_RUN_ADD_CLIENT", WG_CONFIG.get("run_add_client", "false")).lower() == "true"
 
 WG = "/usr/bin/wg"
 WG_QUICK = "/usr/bin/wg-quick"
@@ -82,24 +82,18 @@ def wg_create_vpn_config_for_user(user_sub, description):
                         "psk": client_psk
                     })
         client_ip_octet = result.one()[0]
+
+        client_ip = f"{WG_SUBNET}.{client_ip_octet}"
+        # add client to server configuration
+        if WG_RUN_ADD_CLIENT:
+            subprocess.run(["sudo", "/app/kochcloud/vpn/wg-add-client.py", WG_INTERFACE_NAME, user_sub, description, client_ip, client_public_key, client_psk], check=True)
+        else:
+            print("WARNING: WG_RUN_ADD_CLIENT is false, not adding client to server configuration.")
+
+        # only commit the new client if adding to the server config was successful
         session.commit()
 
-    client_ip = f"{WG_SUBNET}.{client_ip_octet}"
-    # add client to server configuration
-    with open(WG_SERVER_CONFIG_FILE, "a") as f:
-        f.write(textwrap.dedent(f"""
-                # {client_ip_octet}
-                # user: {user_sub}
-                # description: {description}
-                [Peer]
-                PublicKey = {client_public_key}
-                PresharedKey = {client_psk}
-                AllowedIPs = {client_ip}/32
-                """))
-
     print(f"Added new client for {user_sub} with label {description} and IP {client_ip} to {WG_INTERFACE_NAME} server configuration")
-
-    reload_server_configuration()
 
 def client_config_opener(path, flags):
     return os.open(path, flags, mode=0o660)
@@ -109,14 +103,10 @@ def wg_exec(command, args=[], input=None):
     result = subprocess.run([WG, command] + args, check=True, capture_output=True, text=True, input=input)
     return result.stdout.strip()
 
-def reload_server_configuration():
-    """Reload the WireGuard server configuration"""
-    wg_quick = subprocess.Popen([WG_QUICK, "strip", WG_INTERFACE_NAME], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    wg_syncconf = subprocess.Popen([WG, "syncconf", WG_INTERFACE_NAME], stdin=wg_quick.stdin, text=True)
-    output, error = wg_syncconf.communicate()
-    print(f"Reloaded WireGuard server configuration: {output} {error}")
-
 def wg_config_file_body(config: WireGuardConfig):
+    # Configuration based on https://docs.pi-hole.net/guides/vpn/wireguard/client/
+    # Allow access to the Kochcloud under both the WireGuard IP and the local IP of the server,
+    # so that the client can access all local services of Kochcloud but not the rest of the network.
     return textwrap.dedent(f"""
                 # label: {config.description}
 

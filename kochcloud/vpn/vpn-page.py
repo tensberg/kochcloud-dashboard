@@ -22,6 +22,19 @@ def show_vpn_config(config: WireGuardConfig):
         st.download_button(":material/download: Konfiguration herunterladen", config_content, 
                         file_name=WG_CLIENT_CONFIG_DOWNLOAD_FILENAME, mime="text/plain", key=f"download_{config.id}")
 
+@st.fragment
+def show_add_vpn_config():
+    with st.form("create_vpn_config_form", border=False):
+        label = st.text_input("Beschreibung", placeholder=f"Smartphone {len(configs) + 1}", max_chars=50)
+        create_button = st.form_submit_button("Erstellen", icon=":material/add:")
+
+    if create_button:
+        if not label:
+            st.error("Bitte eine Beschreibung angeben")
+        else:
+            wg_create_vpn_config_for_user(user_sub, label)
+            st.rerun()
+
 # main app
 
 st.title("Kochcloud VPN")
@@ -47,10 +60,4 @@ for config in configs:
 
 if len(configs) < 5:
     with st.expander("VPN Konfiguration hinzufügen"):
-        with st.form("create_vpn_config_form", border=False):
-            label = st.text_input("Bezeichnung", value=f"Smartphone {len(configs) + 1}")
-            create_button = st.form_submit_button("Erstellen", icon=":material/add:")
-
-        if create_button:
-            wg_create_vpn_config_for_user(user_sub, label)
-            st.rerun()
+        show_add_vpn_config()
