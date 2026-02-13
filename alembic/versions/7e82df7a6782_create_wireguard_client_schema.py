@@ -10,7 +10,7 @@ from typing import Sequence, Union
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.sql import func
-from sqlalchemy.schema import Sequence, CreateSequence
+from sqlalchemy.schema import Sequence, CreateSequence, DropSequence
 
 # revision identifiers, used by Alembic.
 revision: str = '7e82df7a6782'
@@ -18,10 +18,10 @@ down_revision: Union[str, Sequence[str], None] = '63be430581f7'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
+ip_octet_seq = Sequence("wireguard_client_ip_octet_seq", start=2, maxvalue=254)  # start at 2, .1 is server
 
 def upgrade() -> None:
     """Upgrade schema."""
-    ip_octet_seq = Sequence("wireguard_client_ip_octet_seq", start=2, maxvalue=254)  # start at 2, .1 is server
     op.execute(CreateSequence(ip_octet_seq))
     op.create_table(
         'wireguard_client',
@@ -40,3 +40,4 @@ def upgrade() -> None:
 def downgrade() -> None:
     """Downgrade schema."""
     op.drop_table('wireguard_client')
+    op.execute(DropSequence(ip_octet_seq))
