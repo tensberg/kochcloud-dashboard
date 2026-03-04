@@ -2,7 +2,7 @@ streamlit==1.52.2
 SQLAlchemy==2.0.45
 alembic==1.18.0
 psycopg2-binary==2.9.11
-Authlib==1.6.6
+Authlib==1.6.7
 pyyaml==6.0.3
 qrcode==8.2
 ## The following requirements were added by pip freeze:
